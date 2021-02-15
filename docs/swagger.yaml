@@ -1,0 +1,260 @@
+swagger: '2.0'
+info:
+  version: V1
+  title: Topcoder PostgreSQL API Template
+  description: >
+    ## Pagination
+    
+    - Requests that return multiple items will be paginated to 20 items by
+    default.
+    
+    - You can specify further pages with the `page` parameter.
+    
+    - You can also set a custom page size up to 100 with the `perPage`
+    parameter.
+    
+    - Pagination response data is included in http headers.
+    
+    - By default, the response header contains links with `next`, `last`,
+    `first`, `prev` resource links.
+  license:
+    name: MIT
+    url: 'http://github.com/gruntjs/grunt/blob/master/LICENSE-MIT'
+host: localhost
+basePath: /
+schemes:
+  - http
+produces:
+  - application/json
+consumes:
+  - application/json
+  
+paths:
+  '/entities':
+    get:
+      tags:
+        - Entity
+      summary: Search Entities
+      description: Search Entities
+      parameters:
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/perPage'
+        -
+          in: query
+          name: name
+          required: false
+          type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Entity'
+          headers:
+            X-Next-Page:
+              type: integer
+              description: The index of the next page
+            X-Page:
+              type: integer
+              description: The index of the current page (starting at 1)
+            X-Per-Page:
+              type: integer
+              description: The number of items to list per page
+            X-Prev-Page:
+              type: integer
+              description: The index of the previous page
+            X-Total:
+              type: integer
+              description: The total number of items
+            X-Total-Pages:
+              type: integer
+              description: The total number of pages
+            Link:
+              type: string
+              description: Pagination link header.
+        503:
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      tags:
+        - Entity
+      summary: Create a new Entity
+      description: Create a new Entity
+      parameters:
+        -
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/Entity'
+      responses:
+        201:
+          description: OK
+          schema:
+            $ref: '#/definitions/Entity'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        503:
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/Error'
+  '/entities/{id}':
+    get:
+      tags:
+        - Entity
+      summary: Get Entity by ID
+      description: Get Entity by ID
+      parameters:
+        -
+          in: path
+          name: id
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Entity'
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
+        503:
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      tags:
+        - Entity
+      summary: Fully update Entity
+      description: Fully update Entity
+      parameters:
+        -
+          in: path
+          name: id
+          required: true
+          type: string
+        -
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/Entity'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Entity'
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        503:
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/Error'
+    patch:
+      tags:
+        - Entity
+      summary: Partially update Entity
+      description: Partially update Entity
+      parameters:
+        -
+          in: path
+          name: id
+          required: true
+          type: string
+        -
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/Entity'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Entity'
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        503:
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+        - Entity
+      summary: Delete Entity
+      description: Delete Entity
+      parameters:
+        -
+          in: path
+          name: id
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        503:
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/Error'
+    
+parameters:
+  page:
+    name: page
+    in: query
+    description: The page number.
+    required: false
+    type: integer
+    default: 1
+  perPage:
+    name: perPage
+    in: query
+    description: The number of items to list per page.
+    required: false
+    type: integer
+    default: 20
+    maximum: 100
+definitions:
+  Entity:
+    properties:
+      id:
+        type: string
+        readOnly: true
+      name:
+        type: string
+      createdAt:
+        type: string
+        format: date
+        readOnly: true
+      updatedAt:
+        type: string
+        format: date
+        readOnly: true
+  Error:
+    properties:
+      message:
+        type: string
