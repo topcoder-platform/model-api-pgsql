@@ -21,7 +21,7 @@ This folder contains the template for interacting with PostgreSQL through an API
 
 - LOG_LEVEL: the log level, default is 'debug'
 - API_VERSION: the API version, default is v5
-- PORT: the server port, default is 3000
+- PORT: the server port, default is 2003
 - DATABASE_URL: the PostgreSQL database URL
 - DB_SCHEMA_NAME: the database schema name
 - API_BASE_URL: the API base URL
