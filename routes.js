@@ -1,9 +1,15 @@
 /**
  * This module contains the route definitions
  */
+const healthController = require('./src/controllers/HealthController')
 const entityController = require('./src/controllers/EntityController')
 
 module.exports = {
+  '/health': {
+    get: {
+      method: healthController.check
+    }
+  },
   '/entities': {
     post: {
       method: entityController.create

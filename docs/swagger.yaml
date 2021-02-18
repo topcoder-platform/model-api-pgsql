@@ -13,8 +13,19 @@ info:
     url: http://github.com/gruntjs/grunt/blob/master/LICENSE-MIT
   version: V1
 servers:
-- url: http://localhost:2003/v5
+- url: https://api.topcoder.com/v5/model-api/pgsql
+- url: https://api.topcoder-dev.com/v5/model-api/pgsql
+- url: http://localhost:2003/v5/model-api/pgsql
 paths:
+  /health:
+    get:
+      tags:
+      - Health
+      summary: Health check
+      description: Health check
+      responses:
+        200:
+          description: OK
   /entities:
     get:
       tags:
@@ -366,3 +377,4 @@ components:
         maximum: 100
         type: integer
         default: 20
+        
