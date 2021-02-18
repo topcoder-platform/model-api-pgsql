@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "lint": "standard .",
-    "init-db": "node src/scripts/init-db.js"
+    "init-db": "node src/scripts/init-db.js",
+    "load-db": "node src/scripts/load-db.js"
   },
   "author": "",
   "license": "ISC",
