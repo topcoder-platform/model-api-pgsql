@@ -1,0 +1,30 @@
+{
+  "name": "model-api-pgsql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "lint": "standard .",
+    "init-db": "node src/scripts/init-db.js",
+    "load-db": "node src/scripts/load-db.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "config": "^3.3.1",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "get-parameter-names": "^0.3.0",
+    "http-status": "^1.5.0",
+    "joi": "^14.3.1",
+    "lodash": "^4.17.15",
+    "pg": "^8.5.1",
+    "querystring": "^0.2.0",
+    "sequelize": "^6.5.0",
+    "standard": "^14.3.4",
+    "util": "^0.12.3",
+    "winston": "^3.2.1"
+  }
+}

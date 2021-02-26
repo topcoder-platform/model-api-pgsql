@@ -1,0 +1,380 @@
+openapi: 3.0.1
+info:
+  title: Topcoder PostgreSQL API Template
+  description: |
+    ## Pagination
+    - Requests that return multiple items will be paginated to 20 items by default.
+    - You can specify further pages with the `page` parameter.
+    - You can also set a custom page size up to 100 with the `perPage` parameter.
+    - Pagination response data is included in http headers.
+    - By default, the response header contains links with `next`, `last`, `first`, `prev` resource links.
+  license:
+    name: MIT
+    url: http://github.com/gruntjs/grunt/blob/master/LICENSE-MIT
+  version: V1
+servers:
+- url: https://api.topcoder.com/v5/model-api/pgsql
+- url: https://api.topcoder-dev.com/v5/model-api/pgsql
+- url: http://localhost:2003/v5/model-api/pgsql
+paths:
+  /health:
+    get:
+      tags:
+      - Health
+      summary: Health check
+      description: Health check
+      responses:
+        200:
+          description: OK
+  /entities:
+    get:
+      tags:
+      - Entity
+      summary: Search Entities
+      description: Search Entities
+      parameters:
+      - name: page
+        in: query
+        description: The page number.
+        schema:
+          type: integer
+          default: 1
+      - name: perPage
+        in: query
+        description: The number of items to list per page.
+        schema:
+          maximum: 100
+          type: integer
+          default: 20
+      - name: name
+        in: query
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          headers:
+            X-Next-Page:
+              description: The index of the next page
+              schema:
+                type: integer
+            X-Prev-Page:
+              description: The index of the previous page
+              schema:
+                type: integer
+            X-Per-Page:
+              description: The number of items to list per page
+              schema:
+                type: integer
+            X-Total:
+              description: The total number of items
+              schema:
+                type: integer
+            X-Total-Pages:
+              description: The total number of pages
+              schema:
+                type: integer
+            X-Page:
+              description: The index of the current page (starting at 1)
+              schema:
+                type: integer
+            Link:
+              description: Pagination link header.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Entity'
+        503:
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+      - Entity
+      summary: Create a new Entity
+      description: Create a new Entity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EntityPostRequestBody'
+        required: true
+      responses:
+        201:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-codegen-request-body-name: body
+  /entities/{id}:
+    get:
+      tags:
+      - Entity
+      summary: Get Entity by ID
+      description: Get Entity by ID
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+      - Entity
+      summary: Fully update Entity
+      description: Fully update Entity
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EntityPutRequestBody'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-codegen-request-body-name: body
+    delete:
+      tags:
+      - Entity
+      summary: Delete Entity
+      description: Delete Entity
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content: {}
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      tags:
+      - Entity
+      summary: Partially update Entity
+      description: Partially update Entity
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EntityPatchRequestBody'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        503:
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-codegen-request-body-name: body
+components:
+  schemas:
+    Entity:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        name:
+          type: string
+        description:
+          type: string
+        createdAt:
+          type: string
+          format: date
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date
+          readOnly: true
+    EntityPostRequestBody:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        name:
+          type: string
+        description:
+          type: string
+        createdAt:
+          type: string
+          format: date
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date
+          readOnly: true
+      example:
+        name: "Koenigsegg CCXR Trevita"
+    EntityPutRequestBody:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        name:
+          type: string
+        description:
+          type: string
+        createdAt:
+          type: string
+          format: date
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date
+          readOnly: true
+      example:
+        name: "Koenigsegg CCXR Trevita"
+        description: "Most Expensive Cars In The World - put"
+    EntityPatchRequestBody:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        name:
+          type: string
+        description:
+          type: string
+        createdAt:
+          type: string
+          format: date
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date
+          readOnly: true
+      example:
+        description: "Most Expensive Cars In The World - patch"
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+  parameters:
+    page:
+      name: page
+      in: query
+      description: The page number.
+      schema:
+        type: integer
+        default: 1
+    perPage:
+      name: perPage
+      in: query
+      description: The number of items to list per page.
+      schema:
+        maximum: 100
+        type: integer
+        default: 20
+        
